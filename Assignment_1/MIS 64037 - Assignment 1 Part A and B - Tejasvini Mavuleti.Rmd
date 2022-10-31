@@ -1,0 +1,188 @@
+---
+title: "MIS 64037 - Assignment 1"
+author: "Tejasvini Mavuleti"
+date: "2022-10-29"
+output:
+  word_document: default
+  pdf_document: default
+---
+ADVANCED DATA MINING & PREDICTIVE ANALYTICS
+INDIVIDUAL ASSIGNMENT 1 
+
+## Part A 
+
+# A1) What is the main purpose of regularization when training predictive models?
+
+When training machine learning models, one major aspect is to evaluate whether the model is overfitting the data and to learn the patterns from the training data and generalize them to predict the unseen data effectively. Here, generalization is a term used to describe a model's ability to react to new data. There are many causes for the model's lack of generalization, and overfitting of the model is one among them.  Overfitting occurs when a model attempts to fit all the data points, capturing noises in the process and leading to inaccurate model development. 
+
+This is when regularization plays an important role. Regularization is used to increase the model's generalization capacity by reducing the complexity of the model. It improves a model's performance by simplifying it.  We can appropriately fit our machine learning model on a given test set and reduce its errors using Regularization. This means that regularization discourages learning a model of high complexity and flexibility. A highly flexible model possesses the freedom to fit as many data points as possible. And to simplify the model and reduce its complexity, it penalizes the model. Regularization is used to calibrate machine learning models to minimize the adjusted loss function and prevent overfitting or underfitting. There are two types of regularization techniques - Lasso & ridge regression- used in regression models and the dropout used for regularization of deep Learning models.
+
+One example I could think of is if Amazon wishes to build a model to predict if the user would buy a product or not, given his/her usage history for the last 7 days, and use the data for better decision-making for retargeted digital advertisements. The usage history may include the number of pages visited, total time spent, the number of searches done, average time spent, page revisits, and more. The company could build a model it delivers accurate results on existing data, but when they try to predict with unseen data, it doesn't deliver a good result. Here, it can be concluded that the model does more memorization than learning. If the model has a significant difference between evaluation metrics for the training dataset and testing dataset, then it is said to have an overfitting problem.
+
+
+# A2) What is the role of a loss function in a predictive model? And name two common loss 
+functions for regression models and two common loss functions for classification models.
+
+A loss function measures your prediction model's ability to predict the expected outcome(or value). We convert the learning problem into an optimization problem, define a loss function and then optimize the algorithm to minimize the loss function. Loss functions measure how far an estimated value given by the predictive model is from its true value. It defines an objective which the model's performance is evaluated against, and the parameters learned by the model are determined by minimizing a chosen loss function. So, the loss function is the function that computes the distance between the current output of the algorithm and the expected output. It's a method to evaluate how your algorithm models the data. The loss is reduced by changing the model's parameters until the lowest possible loss is achieved. 
+
+
+These are some examples of loss functions and how they work.
+
+Loss functions for Regression Models
+
+Mean Squared Error (MSE) 
+Mean Squared Error is the average of the squared differences between the actual and the predicted values. The smaller the mean squared error, the closer you are to finding the line of best fit. For a data point Yi and its predicted value Yi, where n is the total number of data points in the dataset, the mean squared error is calculated using the following formula - 
+
+
+Mean Absolute Error (MAE)
+Mean Absolute Error is one of regression models' most simple yet robust loss functions. It is an ideal option in such cases because it does not consider the direction of the outliers that are unrealistically high positive or negative values. As the name suggests, MAE takes the average sum of the absolute differences between the actual and the predicted values. For a data point xi and its predicted value yi, n being the total number of data points in the dataset, the mean absolute error is calculated using the following formula - 
+
+Loss functions for Classification Models
+
+Binary Cross Entropy 
+Binary cross entropy compares each of the predicted probabilities to the actual class output, which can be either 0 or 1. It then calculates the score that penalizes the probabilities based on the distance from the expected value. That means how close or far from the actual value. This is the most common loss function for classification problems with two classes. The word "entropy", seemingly out-of-place, has a statistical interpretation. Entropy is the measure of randomness in the information being processed, and cross-entropy is the difference in the randomness between two random variables. If the divergence of the predicted probability from the actual label increases, the cross-entropy loss increases. By this, predicting a probability of .011 when the actual observation label is 1 would result in a high loss value. In an ideal situation, a "perfect" model would have a log loss of 0.
+
+Since binary classification means the classes take either 0 or 1, if yi = 0, that term ceases to exist and if yi = 1, the (1-yi) term becomes 0.
+
+Categorical Cross Entropy 
+Categorical cross-entropy is a loss function that is used in multi-class classification tasks. These are tasks where an example can only belong to one of many possible categories, and the model must decide which. Formally, it is designed to quantify the difference between two probability distributions. Categorical Cross Entropy loss is essentially Binary Cross Entropy Loss expanded to multiple classes. One requirement when the categorical cross entropy loss function is used is that the labels should be one-hot encoded. This way, only one element will be non-zero, as other elements in the vector would be multiplied by zero. This property is extended to an activation function called softmax.
+
+
+# A3) Consider the following scenario. You are building a classification model with many hyperparameters on a relatively small dataset. You will see that the training error is extremely small. Can you fully trust this model? Discuss the reason.
+
+There are two reasons why a prediction model is said to be a dumb model, as below. First, when the model is under-fitted, the model cannot accurately capture the relationship between the input and output variables, and such a model's performance is worse both on the training and validation sets. So, we need to increase the model's complexity to accurately capture the relationship between the inputs and the output variables. When a prediction model is built using a training set, we should evaluate it both on the training and validation sets. The model can be said to be a good prediction model only if the training error and validation error, the error on the data unseen by the model, is low.
+
+When the model is overfitted, the model performs very well on the training set with very high train accuracy. In contrast, when the same model is applied to the validation set, the error is very high, and a high variance is found between the train and the validation error. This means that the model has become too complicated. It learns the train data, including all the noise and outliers, and becomes sensitive even to the slightest change in the input variables. So, the objective of any machine learning model, generalization, still needs to be achieved, which makes the model perform very poorly on unseen data. This overfitting happens mainly when the training data is relatively small, and the complexity of the model is very high. For example, the model with many hyperparameters is built using a relatively small dataset in the given example.
+
+Since the given model has a high chance of overfitting and high variance, it performs very well on the training set but is likely to perform poorly on the unseen data due to overfitting. Moreover, there is a high chance for the model to be overfitted. We saw that the model is said to be a good prediction model only when it performs well on both the train and the unseen data. 
+
+# A4) What is the role of the lambda parameter in regularized linear models such as Lasso or Ridge regression models?
+
+Lambda is a hyperparameter used in linear models such as Lasso or Ridge Regression for regularization to reduce the complexity of the model.  Linear regression models try to reduce the loss function to get the optimum weights given for each attribute. But, when the model is overfitted and cannot generalize well, we use regularization to penalize the model. This is done by adding an extra term for the loss function directly proportional to the lambda value. So, when we tune this lambda value to increase it, the total loss value is increased, and the model tries to shrink the coefficients of the parameters to arrive at the optimal solution. The idea is that by shrinking or regularizing the coefficients, prediction accuracy can be improved, variance can be decreased, and model interpretability can also be improved.
+
+In ridge regression, we add a penalty using a tuning parameter lambda chosen using cross-validation. The idea is to make the fit small by making the residual sum or squares small, plus adding a shrinkage penalty. The shrinkage penalty is lambda times the sum of squares of the coefficients, so coefficients that get too large are penalized. As lambda gets larger, the bias is unchanged, but the variance drops. The drawback of the ridge is that it doesn't select variables. It includes all the variables in the final model.
+
+In lasso, the penalty is the sum of the absolute values of the coefficients. Lasso shrinks the coefficient estimates towards zero and sets variables equal to zero when lambda is large enough while ridge does not. Hence, much like the best subset selection method, lasso performs variable selection. The tuning parameter lambda is chosen by cross-validation. When lambda is small, the result is essentially the least squares estimates. As lambda increases, shrinkage occurs so that variables that are at zero can be thrown away. So, a major advantage of the lasso is that it combines shrinkage and selection of variables. 
+
+In simple terms - 
+
+In ridge regression:
+-lambda = 0, coefficients of the model are the exact same as normal
+-lambda = infinity, all coefficients of the model approach 0
+-no feature selection occurs; all variables will stay in the model
+-helps control multicollinearity and reduce variance
+
+In lasso:
+-lambda = 0, coefficients of the model are the exact same as normal
+-lambda = infinity, all coefficients of the model are 0
+-feature selection occurs, variables can be completely gotten rid of
+-helps control multicollinearity and reduce variance
+------------------------------------------------------------------------------------------------------------
+
+
+## Part B
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Calling the libraries
+library(ISLR)
+library(caret)
+library(dplyr)
+library(glmnet)
+
+# Using the car seats dataset
+
+attach(Carseats)
+summary(Carseats)
+```
+
+# B1) Building a Lasso regression model to predict Sales based on all other attributes.  
+
+```{r}
+# Adding all the input attributes to the CarSeats_Filtered - scale the input attributes as well 
+
+Carseats_Filtered <- Carseats %>% select( "Price", "Advertising", "Population", "Age", "Income", "Education") %>% scale(center = TRUE, scale = TRUE) %>% as.matrix()
+
+# using glmnet library to convert the input attributes to build a matrix
+x <- Carseats_Filtered
+
+# Now combine the response variable into y into the matrix format
+y <- Carseats %>% select("Sales") %>% as.matrix()
+```
+
+```{r}
+# Now we build the model
+fit = glmnet(x, y) 
+summary(fit)
+plot(fit)
+print(fit)
+cv_fit <- cv.glmnet(x, y, alpha = 1)
+
+# Finding the minimum lambda value
+best_lambda <- cv_fit$lambda.min
+best_lambda
+plot(cv_fit)
+```
+There is only 37.38% variance in the target variable and sales with regularization. Also, the best lambda value is 0.0043 in this model.
+
+
+# B2) What is the coefficient for the price (normalized) attribute in the best model (i.e. model with the optimal lambda)?
+
+```{r}
+# The coefficient for the price attribute in the best model is - 
+best_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model)
+```
+The coefficient of the price attribute with the best lambda value is -1.35384596.
+
+
+# B3) How many attributes remain in the model if lambda is set to 0.01? 
+
+```{r}
+# a - The coefficients of the attributes that are still left if lambda is set to 0.01.
+best_model <- glmnet(x, y, alpha = 1, lambda = 0.01)
+coef(best_model)
+```
+
+These are the coefficients of the independent attributes with the lambda value 0.01. There are no coefficients are eliminated here.
+ -
+
+```{r}
+# b - How is that number changing if lambda is increased to 0.1? 
+best_model <- glmnet(x, y, alpha = 1, lambda = 0.1)
+coef(best_model)
+```
+Now these values of the independent attributes have shrink-ed to some extent and there are two coefficients of the attributes that are removed when the lambda is set to 0.1.
+
+```{r}
+# c- Do you expect more variables to stay in the model (i.e., to have non-zero coefficients) as we increase lambda?
+# Let's say that  the coefficients of the attributes that are still remained if lambda is set to 0.3.
+best_model <- glmnet(x, y, alpha = 1, lambda = 0.3)
+coef(best_model)
+```
+Two of the coefficients of the attributes are gone and the independent attributes have shrink-ed more when lambda value is 0.3.
+
+```{r}
+# Now for example what will happen if the coefficients of the attributes that are still kept if lambda is set to 0.5?
+best_model <- glmnet(x, y, alpha = 1, lambda = 0.5)
+coef(best_model)
+```
+At this point, three of the coefficients of the attributes are eliminated and the independent attributes have shrink-ed further when lambda value is 0.5. 
+
+
+# B4) Build an elastic-net model with alpha set to 0.6. What is the best value of lambda for such a model?
+
+```{r}
+# Now we build an elastic_net model with alpha = 0.6
+el_net = glmnet(x, y, alpha = 0.6)
+plot(el_net, xvar = "lambda")
+plot(cv.glmnet(x, y, alpha = 0.6))
+summary(el_net)
+print(el_net)
+```
+
+Out of all these, the variance is 37.38 in the dependent variable - that is the Sales which shows that the given attributes apply the regularization when we set the alpha value to 0.6 and then the best lambda value is 0.00654.
+
