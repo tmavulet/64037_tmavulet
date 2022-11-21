@@ -1,0 +1,146 @@
+---
+title: "Individual Assignment 2"
+author: "Tejasvini Mavuleti"
+date: "2022-11-19"
+output:
+  word_document: default
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+ADVANCED DATA MINING & PREDICTIVE ANALYTICS
+INDIVIDUAL ASSIGNMENT 2 
+
+## PART A
+
+
+#QA1)  What is the key idea behind bagging? Can bagging deal both with high variance (overfitting) and high bias (underfitting)?
+
+The concept of bagging is about using multiple base learners, trained separately with a random sample from the training set through a voting or an averaging approach to produce a more stable and accurate model. Bagging is also known as Bootstrap aggregating, and in simple terms, it is used to deal with bias-variance trade-offs and reduces the variance of a prediction model. 
+
+In decision trees, it is used when our goal is to reduce the variance of a decision tree. Here the idea is to create several subsets of data from training samples chosen randomly with replacements. Now, each collection of subset data is used to train their decision trees. And in random forest models, it acts as an ensemble algorithm that fits multiple models on different subsets of a training data set, then combines the predictions from all models. Random forest is an extension of bagging that also randomly selects subsets of features used in each data sample. We can't improve the model's predictive force by increasing the training set's size. Instead, it decreases the variance and narrowly tunes the prediction to an expected outcome. These multisets of data are used to train multiple models. As a result, we end up with an ensemble of different models. The average of all the predictions from different models is used. This is more robust than a model. Prediction can be the average of all the predictions given by the different models in the regression case. In the case of classification, the majority vote is taken into consideration.
+
+We also learned that bagging is one of the best ways to reduce over fitting but could be useless for under fitting problems.
+
+Bagging on high variance models: The variance of the model will be reduced without increasing the bias. However, the performance of this model will be better, so bagging is recommended.Bagging on high-bias models: The model's accuracy will always drop compared to the model we could have obtained without bagging. The bagging accuracy increases as the number of bagged models increases. As n reaches infinity, the accuracy of the bagged model will be equal to the accuracy of the direct model. As the model's accuracy always stays the same in the case of biased models, the use of bagging is dissuaded.
+
+It is also known that it reduces variance, so it enormously benefits high-variance classifiers. As the prediction is an average of many classifiers, you obtain a mean score and variance. It can be interpreted as the uncertainty of the prediction. Especially in regression tasks, such uncertainties are otherwise hard to get. A low bias and a low variance are the two most fundamental features expected for a model, although they most often vary in opposite directions. Indeed, to be able to solve a problem, we want our model to have enough degrees of freedom to resolve the underlying complexity of the data we are working with. Still, we also want it to have a few degrees of freedom to avoid high variance and be more robust. This is the well-known bias-variance trade-off.
+
+
+# QA2) Why bagging models are computationally more efficient when compared to boosting models with the same number of weak learners? 
+
+The most significant advantage of Bagging is that multiple weak learners can work better than a single strong learner. It provides stability and increases the machine learning algorithm's accuracy, which is used in statistical classification and regression. In addition, it helps in reducing variance, i.e., it avoids overfitting. We call weak learners or base models that can be used as building blocks for designing more complex models by combining several. Most of the time, these basic models perform poorly because they have a high bias - a low degree of freedom model, for example, or because they have too much variance to be robust (high degree of freedom models. Then, the idea of ensemble methods is to combine several of them to create a strong learner or ensemble model that achieves better performances.
+
+Bagging is a model averaging approach; the final predictions are defined by combining the projections from all the models to improve the stability and accuracy of machine learning algorithms, rather than training multiple classifiers independently, boosting works. In doing so, the new classifier might now get the wrong cases that the earlier classifier got correct, making Bagging computationally more efficient.
+
+
+# QA3)  Do you think creating an ensemble model by combining these tree models can boost the performance? Discuss your answer. 
+
+In this case, James is thinking of creating several decision tree models that are similar to each other. It could be useful if he uses the ensemble method of boosting to re-use the failed iterations and improve them in the next step. James must try to make sure that the decision trees are different to develop a much more robust model. This approach enables the production of a much better predictive performance than a single model to predict the state of a given stock in the next week. 
+
+The best-known ensemble learning Algorithms are bagging and boosting. These two can potentially decrease the variance of a single estimate as they merge several estimates from different decision tree models. However, for ensemble models to be able to
+work as planned, the base learners should be better than a random model and be independent of each other. Neither is the case in the above example; hence, the above example would not boost performance. So, the result would be a model with higher stability. I think I would suggest he start over and begin from scratch to see if there is any change in the results and find if any specific attribute repeats too many times and is the purpose of reducing the model performance. 
+
+# QA4) What would be the information gain for splitting the dataset based on the “Size” attribute?
+
+Information gain calculates the reduction in entropy or surprise from transforming a data set in some way. It is commonly used in the construction of decision trees from a training data set, by evaluating the information gain for each variable, and selecting the variable that maximizes the information gain, which in turn minimizes the entropy and best splits the data set into groups for effective classification. In this case, the objects are color, size, shape and the parent category is edible/ or not edible. 
+
+The Information Gain is 0.106
+
+# QA5) Discuss the implications of setting this parameter too small or too large. 
+
+It is important to use Random Forest models to decide where and how to split the data based on the selection features. Splitting the data into nodes implements a level of differentiation because each tree based on x variables that split based on unique features. In such cases, we must select attributes from a data set and ensure it gives out the best performance. Now, we develop the individual tree with the maximum depth and cluster the trees using weights and averages to predict the performance of the unseen data. The problem is that a single decision tree is overly sensitive to data variations because it could easily overfit noise in the data. The Random Forest with only one tree will overfit to data because it is the equivalent of a single decision tree. If an analyst increases the number of trees in the Random Forest, then the propensity to overfitting should decline. Therefore, this differentiation allows a robot ensemble to generate a much more accurate predictor. And the reason behind selecting an optimal parameter is to reduce the diversity of each individual tree. If it is too low, then the individual trees will not be predictive. So, the best optimal m for this kind of Random Forest model, m parameters would depend on a problem that stands out. Therefore it should be used as mere tuning parameters. 
+
+---------------------------------------------------------------------------------------------------------
+
+## Part B
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Building Decision Tree and Random Forest Models
+
+```{r carseats}
+
+library(caret)
+library(dplyr)
+library(ISLR)
+library(glmnet)
+library(rpart)
+library(rpart.plot)
+
+Carseats_Filtered <- Carseats %>% select("Sales", "Price", "Advertising", "Population", "Age", "Income", "Education")
+```
+
+# QB1) Building  a  decision  tree  regression  model  to  predict  sales 
+
+```{r pressure, echo=FALSE}
+Predict_model <- rpart(Sales~., data=Carseats_Filtered, method = 'anova')
+plot(Predict_model)
+text(Predict_model)
+```
+
+The root node for splitting for this model is Price. And the result shows that price is greater than or equal to 94.5.
+
+```{r}
+library(rattle)
+fancyRpartPlot(Predict_model)
+```
+
+In this Rpart Plot, the top most variable importance is price and the comes the advertisement. 
+
+# QB2) Estimating the sales using the decision tree model 
+
+Given - Sales=9, Price=6.54, Population=124, Advertising=0, Age=76, Income= 110, Education=10
+
+
+```{r}
+Sales <- c(9)
+Price <- c(6.54)
+Population <- c(124)
+Advertising <- c(0)
+Age <- c(76)
+Income <- c(110)
+Education <- c(10)
+Estimate_model <- data.frame(Sales,Price,Population,Advertising,Age,Income,Education)
+```
+
+In the next step, we need to run our test set - estimate model to predict the accurate sales value.
+
+```{r}
+Predict_Sales_Model <- predict(Predict_model, Estimate_model)
+Predict_Sales_Model
+```
+
+Using the decision tree model, the predicted sales value is 9.59 when we use the given record of sales = 9. 
+
+
+# QB3) Using Caret function and Random Forest  
+
+```{r}
+set.seed(64037)
+Caret_random_forest_model <- train(Sales~., data = Carseats_Filtered, method = 'rf')
+```
+
+```{r}
+summary(Caret_random_forest_model)
+print(Caret_random_forest_model)
+plot(Caret_random_forest_model)
+```
+The plot clearly shows that the lowest RMSE is at 2 mtry and this means that 2 is the best performance in this model.
+
+# QB4 Checking the model’s performance for mtry values of 2, 3 and 5 using 3 repeats of 5-fold cross validation
+
+```{r}
+Train_controller <- trainControl(method="repeatedcv", number=5, repeats=3, search="grid")
+tunegrid <- expand.grid(.mtry=c(2,3,5))
+
+New_grid <- train(Sales~., data=Carseats_Filtered, method="rf", tuneGrid=tunegrid,trControl=Train_controller)
+print(New_grid)
+plot(New_grid)
+```
+
+The new grid shows that even after checking mtry at 2,3, and 5 with 5-fold cross validaion and 3 repeats, 2 mtry is still the best spot for mtry with the lowest RMSE of 2.378629. 
+
+# Conclusion
+Bagging is an approach that tries to stabilize the predictions from trees. Rather that fitting a single tree to the data, we will bootstrap the data and for each bootstrap sample, we will fit a tree. The final prediction is an average of all the predictions of the trees, if the outcome is continuous, or the class that was most common among the predictions, if the outcome is categorical and the downside of this approach is that we loose the interpret ability of a single tree. This was one of the unique ways to interpret and see if there is any change using decision trees and randomly selecting the predictors for the best out of the best performing models. 
