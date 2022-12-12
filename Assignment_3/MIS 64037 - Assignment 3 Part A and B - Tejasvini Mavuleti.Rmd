@@ -1,0 +1,139 @@
+---
+title: "MIS 64037 - Assignment 3"
+author: "Tejasvini Mavuleti"
+date: "2022-12-12"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+ADVANCED DATA MINING & PREDICTIVE ANALYTICS
+INDIVIDUAL ASSIGNMENT 3
+
+## Part A
+
+# QA1 
+
+Support Vector Machine is a supervised learning models with associated learning algorithms that analyze data for classification and regression analysis. An SVM outputs a map of the sorted data with the margins between the two as far apart as possible. 
+
+The difference between a hard margin and a soft margin in SVMs lies in the separability of the data. If the data is linearly separable, we go for a hard margin. It will only be feasible if this is the case. If we cannot find a linear classifier, we need to be more lenient and allow a few data points into the model. This will label them as misclassified. In this case, a soft margin SVM is appropriate. 
+
+Sometimes, the data is linearly separable and the margin is too small that the model becomes prone to overfitting or being sensitive to outliers. Soft margins provide a trade-off between the margin and the number of mistakes or margin violations on the training data. Also, in this case, we choose a larger margin by using soft margin SVM to help the model generalize better. On the other hand, a soft margin allows misclassification to happen by relaxing the hard constraints of a SVM. We use soft margins when a linear border is not usable. And we could also use them to increase the generality of the classification model. 
+
+# QA2 
+
+The cost parameter C decides how much an SVM should be allowed to move with the data. We aim for a smooth decision surface for a low cost, and for a higher cost, we look to classify more points correctly. And then, C becomes the penalty parameter of the error term. It controls the trade-off between smooth decision boundaries and classifying the training points correctly.
+
+If the values of C are very small, the margin increases, making it the soft margin.
+As the value of C increases, the margin decreases, making it the hard margin.
+A large value of C can cause overfitting; therefore, we need to select the correct value using hyperparameter tuning.
+
+For example, if we modify the optimization problem to optimize both the fit of the data line and penalize the number of samples inside the margin. Simultaneously, where C defines the weight of how many samples inside the margin contribute to the overall error. Consequently, you can adjust how soft your large margin classification should be with C. 
+Say if C is low, samples within the margin are penalized less than when C is high. When C is large, the SVM tries to minimize the number of misclassified samples due to the high penalty, so the decision boundary has a small margin. Because of this, each misclassified sample has a different penalty. It is directly proportional to the distance to the decision limit. Also, when C is 0, samples within the margin are not penalized. This is one of the extreme cases where large margins defeat classification. Infinite C has another extreme possibility for hard margins.
+
+# QA3
+
+This perceptron will not activate as the result is -2.14, which is less than the activation threshold. 
+0.8 * 0.1 = 0.08
+11.1 * (-0.2) = - 2.22
+0.08 + (-2.22) = -2.14
+
+And -2.14 is less than 2.8
+
+
+# QA4 
+
+Alpha is a parameter for regularization, also called the penalty term, that combats overfitting by constraining the size of the weights. The learning rate sets how the change weights as a function of the inputs (x) and outputs (y) and the target variable. The higher the alpha, i.e., the learning rate, the faster the weight changes occur. A lower alpha will result in smoother changes in weight—the optimal learning rate results in the fastest convergence of the algorithm. The good idea is to start with a high learning rate to adapt fast and then reduce the learning rate to fine-tune it.
+
+## Part B
+
+Building SVM and neural network regression models 
+
+
+```{r}
+library(ISLR)
+library(dplyr)
+library(glmnet)
+library(caret)
+library(kernlab)
+```
+
+
+```{r carseats}
+Carseats_Filtered <- Carseats %>% select("Sales", "Price", "Advertising","Population","Age","Income","Education") 
+```
+
+# QB1
+
+Build a linear SVM regression model to predict Sales. What is the R-squared of the model?
+
+```{r}
+trainctrl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
+set.seed(123)
+svm_linearrm <- train(Sales~., data = Carseats_Filtered, method = "svmLinear",
+                    trControl=trainctrl,
+                    preProcess = c("center", "scale"),
+                    tuneLength = 10)
+svm_linearrm
+```
+For this model, we add a train control to add cross validation to the model
+
+And the R^2 of the model is 0.367. 
+
+
+# QB2
+
+Customize the search grid by checking the models performance for C parameter of 0.1,.5,1 and 10 using 2 repeats of 5-fold cross validation.
+
+```{r}
+grid <- expand.grid(C = c(0.1,0.5,1,10))
+trainctrlm2 <- trainControl(method = "repeatedcv", number = 5, repeats = 2)
+svm_linear_grid <- train(Sales~., data = Carseats_Filtered, method = "svmLinear",
+                         trControl=trainctrlm2,
+                         preProcess = c("center", "scale"),
+                         tuneGrid = grid,
+                         tuneLength = 10)
+svm_linear_grid
+```
+
+For this step we add a search grid at the desired points. Also, we need to increase the value of C to which the change in decreases. The difference between 1 and 10 is much less than between 0.1 and 0.5. With this, we can see that 0.5 is the best value for C. 
+
+# QB3
+
+Train a neural network model to predict Sales 
+
+```{r}
+set.seed(123)
+numberfolds <- trainControl(method = 'LOOCV', verboseIter = FALSE)
+nn_cars <- train(Sales~., data = Carseats_Filtered, method = "nnet",
+                    preProcess = c("center", "scale"),
+                   trControl = numberfolds)
+nn_cars
+```
+The model output shows that the size = 1 and decay 1e-04 as the most optimal model using RMSE. 
+The value for  Rsquared for this model is "NAN". The closest Rsquared is 0.32788 for a model with decay 1e-01 and RMSE of 7.082317.
+
+# QB4
+
+Consider the following input: Sales=9, Price=6.54, Population=124, Advertising=0, Age=76, Income= 110, Education=10. What will be the estimated Sales for this record using the above neuralnet model?
+
+```{r}
+Sales <- c(9)
+Price <- c(6.54)
+Population <- c(124)
+Advertising <- c(0)
+Age <- c(76)
+Income <- c(110)
+Education <- c(10)
+Test <- data.frame(Sales, Price, Population, Advertising, Age, Income, Education)
+```
+
+After we got the test data, we need to predict using the network model. 
+
+```{r}
+Predict_sales <- predict(nn_cars, Test)
+Predict_sales
+```
+Looking at the result we got, the model predicts that only 1 Sale will take place with the given model. The price will be 6.54 and Sales in the output is 9. The output is way different from the ones we calculated using the decision tress, because what we got there was something around 9.5 for Sales. And from what we learnt SVM uses kernel trick to solve non-linear problems whereas decision trees derive hyper-rectangles in input space to solve the problem. I think decision trees are better because it deals co linearity better than SVM. 
